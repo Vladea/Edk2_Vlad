@@ -5,13 +5,13 @@ Environment used as follow:
 
 Edk2 : https://github.com/tianocore/edk2/tree/edk2-stable202505
 
-VS compiler VS2017/19
+VS compiler : VS2017/19
 
 NASM :  https://nasm.us/ (Environment variable : set NASM_PREF=C:\nasm\ )
 
 IASL : https://acpica.org/downloads (C:\ASL\ )
 
-OpenSSL : https://github.com/openssl/openssl/releases(C:\openssl\ )
+OpenSSL : https://github.com/openssl/openssl/releases (C:\openssl\ )
 
 Python : https://www.python.org/ (Version 3.8 or later)
 
@@ -21,9 +21,7 @@ Qemu : https://qemu.weilnetz.de/w64/2022/
 
 Edk Base Tool (optional) : https://github.com/tianocore/edk2-BaseTools-win32
 
-
-
-
+<br/>
 
 ### How to Build Emulator / Ovmf:
 
@@ -40,7 +38,10 @@ edksetup.bat rebuild   //nmake -f %BASE_TOOLS_PATH%\Makefile
 
 build -a X64 -t VS2017 -p EmulatorPkg\EmulatorPkg.dsc -D DEBUG_ON_SERIAL_PORT
 
+build -a X64 -t VS2017 -p OvmfX64Pkg\OvmfX64Pkg.dsc -D DEBUG_ON_SERIAL_PORT
 
+
+<br/>
 
 ### How to Run OVMF Bios:
 
@@ -49,6 +50,8 @@ After build OvmfPkg, you can find OVMF.fd under Build/OvmfX64/DEBUG_VS2017/FV , 
 qemu-system-x86_64.exe -bios OVMF.fd -serial stdio -hda fat:rw:F:\OvmfTemp -net none 
 
 qemu-system-x86_64.exe -pflash OVMF.fd -serial stdio -hda fat:rw:F:\OvmfTemp -net none
+
+<br/>
 
 ### How to Run OVMF Bios With a Ubuntu Os:
 
