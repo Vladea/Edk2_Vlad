@@ -1,0 +1,35 @@
+## @file
+#
+# SPDX-License-Identifier: BSD-2-Clause-Patent
+#
+##
+[Defines]
+  INF_VERSION                    = 0x0001001B
+  BASE_NAME                      = TestAcpiDxe
+  FILE_GUID                      = 87bbe3cc-b509-484d-aad7-220870f48a96
+  MODULE_TYPE                    = DXE_DRIVER
+  VERSION_STRING                 = 1.0
+  ENTRY_POINT                    = TestAcpiEntryPoint
+
+[Sources]
+  TestAcpi.c
+  TestAcpi.asl
+
+[Packages]
+  MdePkg/MdePkg.dec
+  MdeModulePkg/MdeModulePkg.dec
+  UefiCpuPkg/UefiCpuPkg.dec
+
+[LibraryClasses]
+  UefiBootServicesTableLib
+  UefiLib
+  DebugLib
+  BaseLib
+  DxeServicesLib
+  UefiDriverEntryPoint
+
+[Protocols]
+  gEfiAcpiTableProtocolGuid
+
+[Depex]
+  gEfiAcpiTableProtocolGuid
