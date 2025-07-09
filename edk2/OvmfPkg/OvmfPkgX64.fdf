@@ -283,9 +283,6 @@ INF  OvmfPkg/LsiScsiDxe/LsiScsiDxe.inf
   INF  SecurityPkg/VariableAuthenticated/SecureBootConfigDxe/SecureBootConfigDxe.inf
 !endif
 
-
-INF  VladPkg/Dxe/TestAcpi/TestAcpi.inf
-
 INF  MdeModulePkg/Universal/WatchdogTimerDxe/WatchdogTimer.inf
 INF  MdeModulePkg/Universal/MonotonicCounterRuntimeDxe/MonotonicCounterRuntimeDxe.inf
 INF  MdeModulePkg/Universal/CapsuleRuntimeDxe/CapsuleRuntimeDxe.inf
@@ -335,6 +332,10 @@ INF  OvmfPkg/VirtioFsDxe/VirtioFsDxe.inf
 INF MdeModulePkg/Logo/LogoDxe.inf
 
 INF OvmfPkg/TdxDxe/TdxDxe.inf
+
+
+INF  VladPkg/Dxe/TestDxe/VladTestDxe.inf
+
 
 #
 # Hash2 Protocol producer

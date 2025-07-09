@@ -1,0 +1,27 @@
+
+## @file  VladPkg.dec
+# This package just for personal learn.
+#
+##
+
+[Defines]
+  DEC_SPECIFICATION              = 0x00010005
+  PACKAGE_NAME                   = VladPkg
+  ##PACKAGE_UNI_FILE               = YangGangPkg.uni
+  PACKAGE_GUID                   = 46A0F036-ADE0-4FAA-9A58-B0681F5D2C78
+  PACKAGE_VERSION                = 0.1
+
+[Includes]
+  Include
+
+[LibraryClasses]
+
+[Guids]
+  ## Vlad Variable
+  gVladVariableGuid = { 0xea9408df, 0xf4d9, 0x49dc, { 0xa7, 0x31, 0xf4, 0x56, 0x71, 0xe1, 0xb7, 0x10 } }
+
+[Ppis]
+
+[Protocols]
+  ## Include/Protocol/VladProtocolInfo.h
+  gVladProtocolInfoGuid = { 0xbb84a4ef, 0x3c4f, 0x410e, { 0xb6, 0xe, 0xf9, 0x7, 0xab, 0xf9, 0xb4, 0x38 } }

@@ -1,0 +1,35 @@
+## @file
+#
+# Vlad DXE Driver Test.
+#
+##
+
+[Defines]
+  INF_VERSION                    = 0x00010005
+  BASE_NAME                      = VladTestDxe
+  FILE_GUID                      = F8D72B64-E932-4352-8E73-303A12624BC3
+  MODULE_TYPE                    = DXE_DRIVER
+  VERSION_STRING                 = 1.0
+  ENTRY_POINT                    = VladTestDxeEntry
+
+[Sources]
+  VladTestDxe.c
+
+[Packages]
+  MdePkg/MdePkg.dec
+  VladPkg/VladPkg.dec
+
+[LibraryClasses]
+  UefiBootServicesTableLib
+  UefiDriverEntryPoint
+  UefiLib
+  DebugLib
+
+[Guids]
+  gVladVariableGuid
+
+[Protocols]
+  gVladProtocolInfoGuid
+
+[Depex]
+  gEfiVariableArchProtocolGuid AND gEfiVariableWriteArchProtocolGuid

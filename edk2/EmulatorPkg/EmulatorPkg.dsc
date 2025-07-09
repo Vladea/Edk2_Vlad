@@ -469,6 +469,9 @@
 
   MdeModulePkg/Application/HelloWorld/HelloWorld.inf
 
+  VladPkg/Dxe/TestDxe/VladTestDxe.inf
+
+
   MdeModulePkg/Universal/SmbiosDxe/SmbiosDxe.inf
   MdeModulePkg/Universal/HiiDatabaseDxe/HiiDatabaseDxe.inf
   MdeModulePkg/Universal/DisplayEngineDxe/DisplayEngineDxe.inf
