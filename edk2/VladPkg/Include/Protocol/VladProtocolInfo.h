@@ -6,13 +6,24 @@
 #ifndef __VLAD_PROTOCOL_INFO_PROTOCOL_H__
 #define __VLAD_PROTOCOL_INFO_PROTOCOL_H__
 
-#define VLAD_PROTOCOL_INFO_PROTOCOL_GUID  \
-{ 0xbb84a4ef, 0x3c4f, 0x410e, { 0xb6, 0xe, 0xf9, 0x7, 0xab, 0xf9, 0xb4, 0x38 } }
+typedef struct _VLAD_TEST_PROTOCOL VLAD_TEST_PROTOCOL;
 
-typedef struct {
+typedef EFI_STATUS (EFIAPI *VLAD_HELLO_WORLD) (
+  IN VLAD_TEST_PROTOCOL *This
+);
+
+typedef EFI_STATUS (EFIAPI *VLAD_UPDATE_VERSION) (
+  IN VLAD_TEST_PROTOCOL *This
+);
+
+
+struct _VLAD_TEST_PROTOCOL{
+  UINT16                Revision;
+  VLAD_HELLO_WORLD      SayHelloWorld;
+  VLAD_UPDATE_VERSION   UpdateVersion;
   UINT16        FieldA;
   UINT16        FieldB;
-  } TEST_PROTOCOL;
+};
 
 extern EFI_GUID gVladProtocolInfoGuid;
 

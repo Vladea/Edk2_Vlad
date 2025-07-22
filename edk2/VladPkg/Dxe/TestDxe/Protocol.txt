@@ -1,0 +1,85 @@
+----------------------------------------------------------------------------------------------------------------------------------
+        protocol简介
+
+  Protocol直观的讲就是一个结构体，protocol的作用和普通的结构体没有任何区别,如果存放的是数据就作为存储用；
+如果存放的是函数指针就当作特定代码执行。同时UEFI框架内提供了函数来存取protocol。
+  UEFI内大部分的功能代码和设备初始化功能都包装成了一个个的protocol，BLOCK_IO_PROTOCOL为例。
+
+// @file MdePkg\Include\Protocol\Blocklo.h
+///  通过这个Protocol可以控制块设备
+struct _EFI_BLOCK_IO_PROTOCOL {
+  ///
+  ///Protocol版本号，Protocol必须保证向后兼容
+  ///如果没有向后兼容，必须给未来的版本定义不同的GUID,也就是必须定义一个不同的Protocol
+  ///
+  UINT64              Revision;
+  ///
+  /// Pointer to the EFI_BLOCK_IO_MEDIA data for this device.
+  ///
+  EFI_BLOCK_IO_MEDIA  *Media;        //指针指向这个设备
+  EFI_BLOCK_RESET     Reset;         //重置复位信号
+  EFI_BLOCK_READ      ReadBlocks;    //读Protocol服务
+  EFI_BLOCK_WRITE     WriteBlocks;   //写Protocol服务
+  EFI_BLOCK_FLUSH     FlushBlocks;   //清除缓存服务
+};
+
+typedef struct _EFI_BLOCK_IO_PROTOCOL EFI_BLOCK_IO_PROTOCOL;
+#define BLOCK_IO_PROTOCOL  EFI_BLOCK_IO_PROTOCOL_GUID
+extern EFI_GUID gEfiBlockloProtocolGuid; //导出该Protocol
+
+结构体EFI_BLOCK_IO_PROTOCOL有两个成员变量和四个成员函数。 
+（当然从c语言的角度来看，成员函数的叫法不准确，只是个成员变量，这个成员变量是一个函数指针。
+
+
+每一个protocol都必须有一个唯一的GUID,如BLOCK_IO中的guid:
+
+#define EFI_BLOCK_IO_PROTOCOL_GUID \
+  { \
+    0x964e5b21, 0x6459, 0x11d2, {0x8e, 0x39, 0x0, 0xa0, 0xc9, 0x69, 0x72, 0x3b } \
+  }
+
+这个guid是一个标识符，表示了EFI_BLOCK_IO_PROTOCOL
+
+下面是EFI_Blcok_IO_PROTOCOL 中 ReadBlock的原型，
+/**
+  从地址Lba开始的块读取Buffersize字节到缓冲区
+  @retval EFI_SUCCESS           数据从设备正确读出
+  @retval EFI_DEVICE_ERROR      设备出现错误
+  @retval EFI_NO_MEDIA          设备中没有介质
+  @retval EFI_MEDIA_CHANGED     Mediald与当前设备不符
+  @retval EFI_BAD_BUFFER_SIZE   缓冲区大小不是块的整数倍 
+  @retval EFI_INVALID_PARAMETER 要读取的块中包含无效块；或缓冲区未对齐
+**/
+typedef EFI_STATUS(EFIAPI *EFI_BLOCK_READ){
+  IN EFI_BLOCK_IO_PROTOCOL *This,  //This 指针，指向调用上下文
+  IN UINT32 Mediald,               // media Id
+  IN EFI_LBA Lba,                  //要读取的启始块逻辑地址
+  IN UINTN BufferSize,             //要读取的字节数，必须是块大小的整数倍
+  OUT VOID *Buffer                 //目的缓冲区，调用者负责该缓冲区的创建与删除
+  }
+
+第一个参数，指向EFI_BLOCK_IO_PROTOCOL对象自己的This指针，这是成员函数区别于一般函数的重要特征。
+通常，计算机中有许多不同的块设备，每个块设备都有一个EFI_BLOCK_IO_PROTOCOL的实例。
+This指针就是指向这个实例，用于告诉成员函数我们正在操作哪个设备， This指针是Protocol成员函数的一个重要特征。
+与C++成员函数this指针的区别是，C++的this指针由编译器自动加入，而Protocol成员函数的This指针需手工添加
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------
+        如何使用 protocol
+
+一般使用protocol有三个步骤。
+  1.通过openprotocol找到protocol对象。
+  2.使用这个protocol提供的service。
+  3.通过CloseProtocol关闭open过的protocol。
+
+使用Protocol的情况一般用到如下函数
+  OpenProtocol(查询指定的Handle中是否支持指定的Protocol)
+  HandleProtocol(由于OpenProtocol实在是用起来复杂，有时根本不要关心太对细节，所以有了这个接口)
+  LocateProtocol（Open/Handle都是用来打开指定的protocol，但有时我们并不关心protocol在什么地方的时候就可以用这个函数了）
+  CloseProtocol(用来关闭protocol)
+
+*当使用LocateProtocol找到第一个实例后，没有相关的handle是无法关闭的，所以当关闭的时候需要使用OpenProtocolInterface来获取Handle来关闭它。
+
+----------------------------------------------------------------------------------------------------------------------------------
+        如何创建 protocol

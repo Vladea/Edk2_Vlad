@@ -181,7 +181,7 @@ INF  EmulatorPkg/EmuBlockIoDxe/EmuBlockIoDxe.inf
 INF  EmulatorPkg/EmuSnpDxe/EmuSnpDxe.inf
 
 INF  VladPkg/Dxe/TestDxe/VladTestDxe.inf
-
+INF  VladPkg/Dxe/TestDxe/TestProtocol/TestProtocol.inf
 
 INF  MdeModulePkg/Universal/HiiDatabaseDxe/HiiDatabaseDxe.inf
 INF  MdeModulePkg/Universal/DisplayEngineDxe/DisplayEngineDxe.inf

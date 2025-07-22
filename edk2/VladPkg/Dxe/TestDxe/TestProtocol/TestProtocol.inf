@@ -1,0 +1,35 @@
+## @file
+#
+# Vlad Locate Protocol Test.
+#
+##
+
+[Defines]
+  INF_VERSION                    = 0x00010005
+  BASE_NAME                      = VladTestDxe
+  FILE_GUID                      = 9BFAC467-E774-4E91-8431-95F1317C4CF4
+  MODULE_TYPE                    = DXE_DRIVER
+  VERSION_STRING                 = 1.0
+  ENTRY_POINT                    = VladTestProtocolEntry
+
+[Sources]
+  TestProtocol.c
+
+[Packages]
+  MdePkg/MdePkg.dec
+  VladPkg/VladPkg.dec
+
+[LibraryClasses]
+  UefiBootServicesTableLib
+  UefiDriverEntryPoint
+  UefiLib
+  DebugLib
+
+[Guids]
+  gVladVariableGuid
+
+[Protocols]
+  gVladProtocolInfoGuid
+
+[Depex]
+  gVladProtocolInfoGuid

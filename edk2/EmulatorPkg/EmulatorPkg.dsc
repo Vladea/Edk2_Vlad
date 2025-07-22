@@ -470,7 +470,7 @@
   MdeModulePkg/Application/HelloWorld/HelloWorld.inf
 
   VladPkg/Dxe/TestDxe/VladTestDxe.inf
-
+  VladPkg/Dxe/TestDxe/TestProtocol/TestProtocol.inf
 
   MdeModulePkg/Universal/SmbiosDxe/SmbiosDxe.inf
   MdeModulePkg/Universal/HiiDatabaseDxe/HiiDatabaseDxe.inf
