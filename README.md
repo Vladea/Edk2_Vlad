@@ -38,7 +38,7 @@ edksetup.bat rebuild   //nmake -f %BASE_TOOLS_PATH%\Makefile
 
 build -a X64 -t VS2017 -p EmulatorPkg\EmulatorPkg.dsc -D DEBUG_ON_SERIAL_PORT
 
-build -a X64 -t VS2017 -p OvmfX64Pkg\OvmfX64Pkg.dsc -D DEBUG_ON_SERIAL_PORT
+build -a X64 -t VS2017 -p OvmfPkg\OvmfPkgX64.dsc -D DEBUG_ON_SERIAL_PORT
 
 
 <br/>
@@ -59,6 +59,9 @@ qemu-system-x86_64.exe -pflash OVMF.fd -serial stdio -hda fat:rw:F:\OvmfTemp -ne
 
 qemu>qemu-img create -f qcow2 F:\VirtualMachines\Ovmf_Ubuntu\ubuntu-disk.qcow2 20G
 
+Nvme as follow
+qemu-img create -f raw path/to/nvme.raw 24G
+
 #### 2.Start QEMU to install Ubuntu:
 
 qemu-system-x86_64 -pflash F:\VirtualMachines\Ovmf_Ubuntu\OVMF.fd -m  4096 -smp 4 -cdrom F:\OsImage\ubuntu-22.04-desktop-amd64.iso -drive  file=F:\VirtualMachines\Ovmf_Ubuntu\ubuntu-disk.qcow2,format=qcow2  -vga virtio -netdev user,id=net0 -device e1000,netdev=net0 -usb -device  usb-tablet
@@ -67,7 +70,7 @@ qemu-system-x86_64 -pflash F:\VirtualMachines\Ovmf_Ubuntu\OVMF.fd -m  4096 -smp 
 
 #### 3.After installation, you can directly boot from the virtual disk:
 
-qemu-system-x86_64 -pflash F:\VirtualMachines\Ovmf_Ubuntu\OVMF.fd -hda  fat:rw:F:\OvmfTemp -m 4096 -smp 4 -drive  file=F:\VirtualMachines\Ovmf_Ubuntu\ubuntu-disk.qcow2,format=qcow2  -vga virtio  -netdev user,id=net0 -device e1000,netdev=net0  -usb -device  usb-tablet -chardev  stdio,id=char0,logfile=F:\VirtualMachines\Ovmf_Ubuntu\serial.log,signal=off  -serial chardev:char0
+qemu-system-x86_64 -pflash F:\VirtualMachines\Ovmf_Ubuntu\OVMF.fd -hda  fat:rw:F:\OvmfTemp -m 4096 -smp 4 -drive  file=F:\VirtualMachines\Ovmf_Ubuntu\ubuntu-disk.qcow2,format=qcow2  -vga virtio  -netdev user,id=net0 -device e1000,netdev=net0  -usb -device  usb-tablet -chardev  stdio,id=char0,logfile=F:\VirtualMachines\Ovmf_Ubuntu\serial.log,signal=off  -serial chardev:char0  -drive file=nvm.img,if=none,id=nvm  -device nvme,serial=deadbeef,drive=nvm
 
 
 
