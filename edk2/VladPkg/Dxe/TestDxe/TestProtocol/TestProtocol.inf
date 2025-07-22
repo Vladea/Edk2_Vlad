@@ -23,6 +23,7 @@
   UefiBootServicesTableLib
   UefiDriverEntryPoint
   UefiLib
+  PcdLib
   DebugLib
 
 [Guids]
@@ -30,6 +31,12 @@
 
 [Protocols]
   gVladProtocolInfoGuid
+
+[Pcd]
+  gVladPkgTokenSpaceGuid.PcdFullUserName
+  gVladPkgTokenSpaceGuid.PcdLifeStatus
+  gVladPkgTokenSpaceGuid.PcdEmulatorSupport
+  gVladPkgTokenSpaceGuid.PcdAmdMmioAbove4GLimit
 
 [Depex]
   gVladProtocolInfoGuid

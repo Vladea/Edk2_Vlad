@@ -8,27 +8,25 @@
 
 VLAD_TEST_PROTOCOL  mVladProtocol;
 
-//extern gVladVariableGuid = { 0xea9408df, 0xf4d9, 0x49dc, { 0xa7, 0x31, 0xf4, 0x56, 0x71, 0xe1, 0xb7, 0x10 } };
-
-
 EFI_STATUS
 EFIAPI
 SayHelloWorld (
   VLAD_TEST_PROTOCOL *This
   )
 {
-  DEBUG ((DEBUG_INFO, "[VladTestDxe] Hello world, Happy %d years birthday\n", This->FieldB));
+  DEBUG ((DEBUG_INFO, "[VladTestDxe] Hello from Vlad Protocol, Happy %d years birthday\n", This->FieldB));
   return EFI_SUCCESS;
 }
 
 EFI_STATUS
 EFIAPI
 UpdateVersion (
-  VLAD_TEST_PROTOCOL *This
+  VLAD_TEST_PROTOCOL *This,
+  UINT16             Reversion
 ) {
-  DEBUG ((DEBUG_INFO, "[VladTestDxe] Before Update ,Reversion is %x\n", This->Revision));
-  This->Revision = 0xDCBA;
-  DEBUG ((DEBUG_INFO, "[VladTestDxe] After Update ,Reversion be like in func:  0x%x\n", This->Revision));
+  //DEBUG ((DEBUG_INFO, "[VladTestDxe] Before Update ,Reversion is %x\n", This->Revision));
+  This->Revision = Reversion;
+  //DEBUG ((DEBUG_INFO, "[VladTestDxe] After Update ,Reversion be like in func:  0x%x\n", This->Revision));
   return EFI_SUCCESS;
 }
 

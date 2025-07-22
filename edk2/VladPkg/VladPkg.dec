@@ -7,7 +7,6 @@
 [Defines]
   DEC_SPECIFICATION              = 0x00010005
   PACKAGE_NAME                   = VladPkg
-  ##PACKAGE_UNI_FILE               = YangGangPkg.uni
   PACKAGE_GUID                   = 46A0F036-ADE0-4FAA-9A58-B0681F5D2C78
   PACKAGE_VERSION                = 0.1
 
@@ -18,10 +17,42 @@
 
 [Guids]
   ## Vlad Variable
-  gVladVariableGuid = { 0xea9408df, 0xf4d9, 0x49dc, { 0xa7, 0x31, 0xf4, 0x56, 0x71, 0xe1, 0xb7, 0x10 } }
+  gVladVariableGuid          = { 0xea9408df, 0xf4d9, 0x49dc, { 0xa7, 0x31, 0xf4, 0x56, 0x71, 0xe1, 0xb7, 0x10 } }
+  gVladPkgTokenSpaceGuid     = { 0xd4d8435f, 0xfffb, 0x4acb, { 0xa0, 0x4d, 0xff, 0x0f, 0xad, 0x67, 0x7f, 0xe9 } }
 
 [Ppis]
 
+[PcdsFixedAtBuild]
+#----------------------------------------------------------------------------
+#- Start documentation of user configurable controls
+  ### @name General System PCD Controls
+#----------------------------------------------------------------------------
+  gVladPkgTokenSpaceGuid.PcdFullUserName|"VladleaIII"|VOID*|0x000AB001
+  gVladPkgTokenSpaceGuid.PcdLifeStatus|TRUE|BOOLEAN|0x000AB002
+  gVladPkgTokenSpaceGuid.PcdAcpiTableHeaderOemId|"VATT"|VOID*|0x000AB003
+
+
+## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ##
+## ##
+## ##                D Y N A M I C   P C D s
+## ##
+## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ##
+
+[PcdsDynamic]
+#----------------------------------------------------------------------------
+#    System level Dynamic PCDs
+#----------------------------------------------------------------------------
+  gVladPkgTokenSpaceGuid.PcdEmulatorSupport|TRUE|BOOLEAN|0x000AC001
+  gVladPkgTokenSpaceGuid.PcdOvmfSupport|TRUE|BOOLEAN|0x000AC002
+
+### @cond (FF3||RN||BA||ZP||RMB||RPL||RS||SSP||MI3||BRH)
+### @brief Specifies the top address to be used for MMIO space allocations. No MMIO space will be used above this limit. Some devices have limits on the address space they
+### are able to access. For example a device with a 40-bit address limitation can not use MMIO space above 1TeraByte (1T). By setting this PCD to 0x10000000000 (1T), MMIO
+### space would not be allocated above 1T. The default is to use all of the space above the end of physical memory.
+  gVladPkgTokenSpaceGuid.PcdAmdMmioAbove4GLimit|0xFFFFFFFFFFFFFFFF|UINT64|0x000AC003
+### @endcond
+
+
 [Protocols]
   ## Include/Protocol/VladProtocolInfo.h
-  gVladProtocolInfoGuid = { 0xbb84a4ef, 0x3c4f, 0x410e, { 0xb6, 0xe, 0xf9, 0x7, 0xab, 0xf9, 0xb4, 0x38 } }
+  gVladProtocolInfoGuid      = { 0xbb84a4ef, 0x3c4f, 0x410e, { 0xb6, 0x0e, 0xf9, 0x07, 0xab, 0xf9, 0xb4, 0x38 } }

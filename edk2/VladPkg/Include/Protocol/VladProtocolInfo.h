@@ -13,7 +13,8 @@ typedef EFI_STATUS (EFIAPI *VLAD_HELLO_WORLD) (
 );
 
 typedef EFI_STATUS (EFIAPI *VLAD_UPDATE_VERSION) (
-  IN VLAD_TEST_PROTOCOL *This
+  IN VLAD_TEST_PROTOCOL *This,
+  IN UINT16             Reversion
 );
 
 
