@@ -335,7 +335,7 @@ INF OvmfPkg/TdxDxe/TdxDxe.inf
 
 
 INF  VladPkg/Dxe/TestDxe/VladTestDxe.inf
-
+INF  VladPkg/Dxe/TestDxe/TestProtocol/TestProtocol.inf
 
 #
 # Hash2 Protocol producer

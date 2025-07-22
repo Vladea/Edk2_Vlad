@@ -945,6 +945,7 @@
 
 
   VladPkg/Dxe/TestDxe/VladTestDxe.inf
+  VladPkg/Dxe/TestDxe/TestProtocol/TestProtocol.inf
 
 
   #
