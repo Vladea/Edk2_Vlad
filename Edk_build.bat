@@ -1,117 +1,107 @@
 @echo off
-:: ===========================================================================
-:: EDK II 一键构建脚本
-:: 功能：自动设置环境并构建EDK II项目
-:: 注意：本文件必须保存为GBK编码以保证中文正常显示
-:: ===========================================================================
+:: ========================================================
+:: EDK II Smart Build Script
+:: Supports both command-line arguments and interactive mode
+:: Usage examples:
+::   Edk_build.bat                   -> Interactive mode
+::   Edk_build.bat 1                 -> Auto-build EmulatorPkg
+::   Edk_build.bat 2                 -> Auto-build OvmfPkgX64
+::   Edk_build.bat "path\to\custom.dsc" -> Build custom DSC
+:: ========================================================
 
-:: 设置控制台编码为GBK（简体中文）
-::chcp 936 >nul
-
-:: 启用延迟变量扩展
+:: Initialization
+chcp 65001 >nul
 setlocal enabledelayedexpansion
 
-echo [1/6] 设置工作空间...
-:: 使用当前目录作为工作空间
+:: Initialize DSC_FILE variable
+set DSC_FILE=
+
+:: Argument processing
+if not "%~1"=="" (
+    if "%~1"=="1" (
+        set DSC_FILE=EmulatorPkg\EmulatorPkg.dsc
+    ) else if "%~1"=="2" (
+        set DSC_FILE=OvmfPkg\OvmfPkgX64.dsc
+    ) else (
+        :: Handle quoted paths
+        set DSC_FILE=%~1
+    )
+)
+
+echo [1/6] Setting workspace...
 set "WORKSPACE=%CD%"
-:: 设置EDK II包路径
 set "PACKAGES_PATH=%WORKSPACE%\edk2"
 echo   WORKSPACE: %WORKSPACE%
 echo   PACKAGES_PATH: %PACKAGES_PATH%
 
-echo [2/6] 进入edk2目录...
-:: 注意：此处屏蔽了cd命令的输出（包括错误输出）
+echo [2/6] Entering edk2 directory...
 cd /d "%WORKSPACE%\edk2" 2>&1 >nul || (
-    echo ERROR: edk2目录在%WORKSPACE%中未找到
+    echo ERROR: edk2 directory not found in %WORKSPACE%
     exit /b 1
 )
 
-echo [3/6] 初始化构建环境...
-:: 注意：此处屏蔽了edksetup.bat的所有输出
-:: 如需查看详细输出，请移除 "2>&1 >nul"
+echo [3/6] Initializing build environment...
 call edksetup.bat 2>&1 >nul || (
-    echo ERROR: edksetup.bat 执行失败
+    echo ERROR: edksetup.bat failed
     exit /b 1
 )
 
-echo [4/6] 重建基础工具...
-:: 注意：此处屏蔽了edksetup.bat rebuild的所有输出
-:: 如需查看详细输出，请移除 "2>&1 >nul"
+echo [4/6] Rebuilding base tools...
 call edksetup.bat rebuild 2>&1 >nul || (
-    echo ERROR: 工具重建失败
+    echo ERROR: Tools rebuild failed
     exit /b 1
 )
 
-:: ===========================================================================
-:: 构建参数配置
-:: 可修改以下参数以适应不同构建需求
-:: ===========================================================================
+:: Build configuration
 set BUILD_ARCH=X64
 set BUILD_TOOLCHAIN=VS2017
 set BUILD_FLAGS=-D DEBUG_ON_SERIAL_PORT
 
-:: ===========================================================================
-:: 构建目标选择
-:: 支持三种构建目标选择方式
-:: ===========================================================================
-echo [5/6] 选择构建目标：
-echo   1. EmulatorPkg (默认)
-echo   2. OvmfPkgX64
-echo   3. 自定义 DSC 文件
-
-:: 获取用户输入（使用双引号避免空格问题）
-set /p "choice=请选择构建目标 (1-3): "
-
-:: 处理空输入（默认为选项1）
-if "!choice!"=="" set choice=1
-
-if "!choice!"=="1" (
-    set DSC_FILE=EmulatorPkg\EmulatorPkg.dsc
-) else if "!choice!"=="2" (
-    set DSC_FILE=OvmfPkg\OvmfPkgX64.dsc
-) else if "!choice!"=="3" (
-    set /p "DSC_FILE=请输入 DSC 文件路径: "
+:: ========================================================
+:: Build target selection
+:: Skip interactive mode if command-line argument was provided
+:: ========================================================
+if defined DSC_FILE (
+    echo [5/6] Using build target specified via command-line: %DSC_FILE%
 ) else (
-    echo 无效选择，使用默认构建目标
-    set DSC_FILE=EmulatorPkg\EmulatorPkg.dsc
+    echo [5/6] Select build target:
+    echo   1. EmulatorPkg (default)
+    echo   2. OvmfPkgX64
+    echo   3. Custom DSC file
+    
+    set /p "choice=Select target (1-3): "
+    if "!choice!"=="" set choice=1
+    
+    if "!choice!"=="1" (
+        set DSC_FILE=EmulatorPkg\EmulatorPkg.dsc
+    ) else if "!choice!"=="2" (
+        set DSC_FILE=OvmfPkg\OvmfPkgX64.dsc
+    ) else if "!choice!"=="3" (
+        set /p "DSC_FILE=Enter DSC file path: "
+    ) else (
+        echo Invalid selection, using default target
+        set DSC_FILE=EmulatorPkg\EmulatorPkg.dsc
+    )
 )
 
-:: 验证 DSC 文件是否存在
-if not exist "!DSC_FILE!" (
-    echo ERROR: DSC 文件不存在 - !DSC_FILE!
+:: Verify DSC file exists
+if not exist "%DSC_FILE%" (
+    echo ERROR: DSC file not found - %DSC_FILE%
     exit /b 1
 )
 
-:: ===========================================================================
-:: 构建执行阶段
-:: 此部分输出不会被屏蔽，以便用户查看构建进度
-:: ===========================================================================
-echo [6/6] 开始构建: !DSC_FILE!
-echo   架构: %BUILD_ARCH%
-echo   工具链: %BUILD_TOOLCHAIN%
-echo   标志: %BUILD_FLAGS%
+:: ========================================================
+:: Build execution
+:: ========================================================
+echo [6/6] Starting build: %DSC_FILE%
+echo   Architecture: %BUILD_ARCH%
+echo   Toolchain: %BUILD_TOOLCHAIN%
+echo   Flags: %BUILD_FLAGS%
 
-:: 执行构建命令（注意：此处保留所有输出）
-build -a %BUILD_ARCH% -t %BUILD_TOOLCHAIN% -p "!DSC_FILE!" %BUILD_FLAGS% || (
-    echo ERROR: 构建失败 !DSC_FILE!
+build -a %BUILD_ARCH% -t %BUILD_TOOLCHAIN% -p "%DSC_FILE%" %BUILD_FLAGS% || (
+    echo ERROR: Build failed for %DSC_FILE%
     exit /b 1
 )
 
-echo 构建成功完成: !DSC_FILE!
+echo Build completed successfully: %DSC_FILE%!
 endlocal
-
-:: ===========================================================================
-:: 输出屏蔽说明
-::
-:: 本脚本屏蔽了以下非关键命令的输出：
-:: 1. chcp 936 >nul         - 屏蔽代码页更改提示
-:: 2. cd ... 2>&1 >nul      - 屏蔽目录切换输出（包括错误）
-:: 3. call edksetup.bat ... - 屏蔽环境初始化和工具重建输出
-::
-:: 如需解除屏蔽，请：
-:: 1. 删除 "2>&1 >nul" 重定向
-:: 2. 或者改为重定向到日志文件：
-::    例: call edksetup.bat > setup.log 2>&1
-::
-:: 构建命令 (build) 的输出未被屏蔽，以便实时监控进度
-:: ===========================================================================
